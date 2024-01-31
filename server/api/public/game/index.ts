@@ -1,20 +1,20 @@
-import type * as Types from 'api/@types'
+import type * as Types from 'api/@types';
 
 export type Methods = {
   get: {
-    status: 200
+    status: 200;
     /** Game state retrieved successfully */
-    resBody: Types.GameStateEntity
-  }
+    resBody: Types.GameStateEntity;
+  };
 
   post: {
-    status: 201
+    status: 201;
     /** New game started successfully */
-    resBody: Types.GameStateEntity
+    resBody: Types.GameStateEntity;
 
     reqBody: {
-      player1: Types.UserEntity
-      player2: Types.UserEntity
-    }
-  }
-}
+      player1: Types.UserEntity;
+      player2: Types.UserEntity;
+    };
+  };
+};

@@ -1,16 +1,16 @@
-import type * as Types from 'api/@types'
+import type * as Types from 'api/@types';
 
 export type Methods = {
   post: {
-    status: 200
+    status: 200;
     /** Move made successfully */
-    resBody: Types.GameStateEntity
+    resBody: Types.GameStateEntity;
 
     reqBody: {
       position: {
-        x: number
-        y: number
-      }
-    }
-  }
-}
+        x: number;
+        y: number;
+      };
+    };
+  };
+};
