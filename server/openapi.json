@@ -1,0 +1,191 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Online Othello Game Service",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://your-othello-game-service.com/api",
+      "description": "Main API server"
+    }
+  ],
+  "paths": {
+    "/public/game": {
+      "get": {
+        "summary": "Retrieve the current state of the game",
+        "responses": {
+          "200": {
+            "description": "Game state retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GameStateEntity"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Start a new game",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "player1": {
+                    "$ref": "#/components/schemas/UserEntity"
+                  },
+                  "player2": {
+                    "$ref": "#/components/schemas/UserEntity"
+                  }
+                },
+                "required": [
+                  "player1",
+                  "player2"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "New game started successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GameStateEntity"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/private/move": {
+      "post": {
+        "summary": "Make a move in the game",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "position": {
+                    "type": "object",
+                    "properties": {
+                      "x": {
+                        "type": "integer"
+                      },
+                      "y": {
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "x",
+                      "y"
+                    ]
+                  }
+                },
+                "required": [
+                  "position"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Move made successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GameStateEntity"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UserEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "photoURL": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "GameStateEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "board": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "empty",
+                  "black",
+                  "white"
+                ]
+              }
+            }
+          },
+          "currentTurn": {
+            "type": "string",
+            "enum": [
+              "black",
+              "white"
+            ]
+          },
+          "player1": {
+            "$ref": "#/components/schemas/UserEntity"
+          },
+          "player2": {
+            "$ref": "#/components/schemas/UserEntity"
+          },
+          "winner": {
+            "type": "string",
+            "enum": [
+              "black",
+              "white",
+              "draw",
+              "none"
+            ],
+            "description": "none indicates the game is still in progress"
+          }
+        },
+        "required": [
+          "id",
+          "board",
+          "currentTurn",
+          "player1",
+          "player2",
+          "winner"
+        ]
+      }
+    }
+  }
+}
