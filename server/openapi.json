@@ -1,63 +1,31 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Online Othello Game Service",
-    "version": "1.0.0"
+    "title": "Notion-like Document Editor Service",
+    "version": "1.0.0",
+    "description": "API for a web service that provides basic document editing features similar to Notion."
   },
   "servers": [
     {
-      "url": "https://your-othello-game-service.com/api",
-      "description": "Main API server"
+      "url": "https://api.yourdomain.com/",
+      "description": "Production server"
     }
   ],
   "paths": {
-    "/public/game": {
+    "/public/documents": {
       "get": {
-        "summary": "Retrieve the current state of the game",
+        "summary": "Retrieve a list of public documents",
+        "operationId": "getPublicDocuments",
         "responses": {
           "200": {
-            "description": "Game state retrieved successfully",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GameStateEntity"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "summary": "Start a new game",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "player1": {
-                    "$ref": "#/components/schemas/UserEntity"
-                  },
-                  "player2": {
-                    "$ref": "#/components/schemas/UserEntity"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DocumentEntity"
                   }
-                },
-                "required": [
-                  "player1",
-                  "player2"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "New game started successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GameStateEntity"
                 }
               }
             }
@@ -65,49 +33,166 @@
         }
       }
     },
-    "/private/move": {
+    "/public/documents/{documentId}": {
+      "get": {
+        "summary": "Retrieve a public document",
+        "operationId": "getPublicDocument",
+        "parameters": [
+          {
+            "name": "documentId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the document to retrieve",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentEntity"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/private/documents": {
       "post": {
-        "summary": "Make a move in the game",
+        "summary": "Create a new document",
+        "operationId": "createDocument",
         "requestBody": {
+          "description": "Document data to create",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "position": {
-                    "type": "object",
-                    "properties": {
-                      "x": {
-                        "type": "integer"
-                      },
-                      "y": {
-                        "type": "integer"
-                      }
-                    },
-                    "required": [
-                      "x",
-                      "y"
-                    ]
+                "$ref": "#/components/schemas/DocumentEntity"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Document created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentEntity"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Retrieve all user's documents",
+        "operationId": "getAllUserDocuments",
+        "responses": {
+          "200": {
+            "description": "List of documents",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DocumentEntity"
                   }
-                },
-                "required": [
-                  "position"
-                ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/private/documents/{documentId}": {
+      "get": {
+        "summary": "Retrieve a specific document",
+        "operationId": "getPrivateDocument",
+        "parameters": [
+          {
+            "name": "documentId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the document to retrieve",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentEntity"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a specific document",
+        "operationId": "updateDocument",
+        "parameters": [
+          {
+            "name": "documentId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the document to update",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Document data to update",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentEntity"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Move made successfully",
+            "description": "Document updated",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GameStateEntity"
+                  "$ref": "#/components/schemas/DocumentEntity"
                 }
               }
             }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a specific document",
+        "operationId": "deleteDocument",
+        "parameters": [
+          {
+            "name": "documentId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the document to delete",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Document deleted"
           }
         }
       }
@@ -115,6 +200,38 @@
   },
   "components": {
     "schemas": {
+      "DocumentEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the document"
+          },
+          "title": {
+            "type": "string",
+            "description": "Title of the document"
+          },
+          "content": {
+            "type": "string",
+            "description": "Content of the document"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Creation date of the document"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Last update date of the document"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "content"
+        ]
+      },
       "UserEntity": {
         "type": "object",
         "properties": {
@@ -131,59 +248,6 @@
         "required": [
           "id",
           "name"
-        ]
-      },
-      "GameStateEntity": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "board": {
-            "type": "array",
-            "items": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "empty",
-                  "black",
-                  "white"
-                ]
-              }
-            }
-          },
-          "currentTurn": {
-            "type": "string",
-            "enum": [
-              "black",
-              "white"
-            ]
-          },
-          "player1": {
-            "$ref": "#/components/schemas/UserEntity"
-          },
-          "player2": {
-            "$ref": "#/components/schemas/UserEntity"
-          },
-          "winner": {
-            "type": "string",
-            "enum": [
-              "black",
-              "white",
-              "draw",
-              "none"
-            ],
-            "description": "none indicates the game is still in progress"
-          }
-        },
-        "required": [
-          "id",
-          "board",
-          "currentTurn",
-          "player1",
-          "player2",
-          "winner"
         ]
       }
     }
