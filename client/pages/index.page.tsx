@@ -1,54 +1,58 @@
-import { DocumentEditor } from 'features/DocumentEditor/DocumentEditor';
+import type { TweetEntity } from 'api/@types';
+import { userAtom } from 'atoms/user';
+import { useAtom } from 'jotai';
 import { useCallback, useEffect, useState } from 'react';
 import { apiClient } from 'utils/apiClient';
+import { returnNull } from 'utils/returnNull';
 import styles from './index.module.css';
 
 const Home = () => {
-  const [document, setDocument] = useState<{ title: string; content: string }>({
-    title: '',
-    content: '',
-  });
-  const [documents, setDocuments] = useState<{ id: string; title: string }[]>([]);
+  const [user] = useAtom(userAtom);
+  const [tweets, setTweets] = useState<TweetEntity[]>([]);
+  const [newTweet, setNewTweet] = useState<string>('');
 
-  const fetchDocuments = useCallback(async () => {
-    const res = await apiClient.private.documents.$get();
-    setDocuments(res);
+  const fetchTweets = useCallback(async () => {
+    const fetchedTweets = await apiClient.public.timeline.$get().catch(returnNull);
+    if (fetchedTweets) setTweets(fetchedTweets);
   }, []);
 
+  const postTweet = async () => {
+    if (newTweet.length === 0 || newTweet.length > 140) return;
+    await apiClient.private.tweets.$post({ body: { text: newTweet } }).catch(returnNull);
+    setNewTweet('');
+    await fetchTweets();
+  };
+
   useEffect(() => {
-    fetchDocuments();
-  }, [fetchDocuments]);
-
-  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDocument({ ...document, title: e.target.value });
-  };
-
-  const handleContentChange = (content: string) => {
-    setDocument({ ...document, content });
-  };
-
-  const handleSave = async () => {
-    if (document.title && document.content) {
-      await apiClient.private.documents.$post({ body: document });
-      fetchDocuments();
-    }
-  };
+    fetchTweets();
+    const intervalId = setInterval(fetchTweets, 5000);
+    return () => clearInterval(intervalId);
+  }, [fetchTweets]);
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <input
-          type="text"
-          placeholder="Document Title"
-          value={document.title}
-          onChange={handleTitleChange}
-          className={styles.titleInput}
+      <div className={styles.tweetBox}>
+        <textarea
+          className={styles.tweetInput}
+          placeholder="What's happening?"
+          value={newTweet}
+          onChange={(e) => setNewTweet(e.target.value)}
         />
-        <button onClick={handleSave} className={styles.saveButton}>
-          Save
+        <button className={styles.tweetButton} onClick={postTweet} disabled={newTweet.length === 0 || newTweet.length > 140}>
+          Tweet
         </button>
       </div>
-      <DocumentEditor content={document.content} onChange={handleContentChange} />
+      <ul className={styles.timeline}>
+        {tweets.map((tweet) => (
+          <li key={tweet.id} className={styles.tweet}>
+            <p>{tweet.text}</p>
+            <div className={styles.tweetInfo}>
+              <span>by {tweet.userId}</span>
+              <span>{new Date(tweet.createdAt).toLocaleString()}</span>
+            </div>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
