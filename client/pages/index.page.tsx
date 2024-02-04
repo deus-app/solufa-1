@@ -38,7 +38,11 @@ const Home = () => {
           value={newTweet}
           onChange={(e) => setNewTweet(e.target.value)}
         />
-        <button className={styles.tweetButton} onClick={postTweet} disabled={newTweet.length === 0 || newTweet.length > 140}>
+        <button
+          className={styles.tweetButton}
+          onClick={postTweet}
+          disabled={newTweet.length === 0 || newTweet.length > 140}
+        >
           Tweet
         </button>
       </div>
