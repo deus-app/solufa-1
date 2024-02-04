@@ -1,11 +1,14 @@
+import { DocumentEditor } from 'features/DocumentEditor/DocumentEditor';
 import { useCallback, useEffect, useState } from 'react';
 import { apiClient } from 'utils/apiClient';
-import { DocumentEditor } from 'features/DocumentEditor/DocumentEditor';
 import styles from './index.module.css';
 
 const Home = () => {
-  const [document, setDocument] = useState<{ title: string; content: string; }>({ title: '', content: '' });
-  const [documents, setDocuments] = useState<{ id: string; title: string; }[]>([]);
+  const [document, setDocument] = useState<{ title: string; content: string }>({
+    title: '',
+    content: '',
+  });
+  const [documents, setDocuments] = useState<{ id: string; title: string }[]>([]);
 
   const fetchDocuments = useCallback(async () => {
     const res = await apiClient.private.documents.$get();
@@ -35,13 +38,15 @@ const Home = () => {
     <div className={styles.container}>
       <div className={styles.header}>
         <input
-          type='text'
-          placeholder='Document Title'
+          type="text"
+          placeholder="Document Title"
           value={document.title}
           onChange={handleTitleChange}
           className={styles.titleInput}
         />
-        <button onClick={handleSave} className={styles.saveButton}>Save</button>
+        <button onClick={handleSave} className={styles.saveButton}>
+          Save
+        </button>
       </div>
       <DocumentEditor content={document.content} onChange={handleContentChange} />
     </div>
