@@ -52,7 +52,7 @@ test('GET: /api/public/documents', async () => {
 
 test('GET: /api/public/documents/_documentId@string', async () => {
   const document = await createDocument();
-  the res = await apiClient.public.documents._documentId(document.id).get();
+  const res = await apiClient.public.documents._documentId(document.id).get();
   expect(res.status === 200).toBeTruthy();
 });
 
