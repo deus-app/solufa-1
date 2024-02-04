@@ -1,6 +1,6 @@
+import { OTHER_USER_ID, SELF_USER_ID } from 'tests/const';
 import { expect, test } from 'vitest';
 import { apiClient } from './apiClient';
-import { OTHER_USER_ID, SELF_USER_ID } from 'tests/const';
 
 // POST: /api/private/documents
 const createDocument = async (): Promise<{ id: string }> => {
