@@ -1,30 +1,27 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Notion-like Document Editor Service",
-    "version": "1.0.0",
-    "description": "API for a web service that provides basic document editing features similar to Notion."
+    "title": "Twitter Clone API",
+    "version": "1.0.0"
   },
   "servers": [
     {
-      "url": "https://api.yourdomain.com/",
-      "description": "Production server"
+      "url": "https://api.twitterclone.com/"
     }
   ],
   "paths": {
-    "/public/documents": {
+    "/public/timeline": {
       "get": {
-        "summary": "Retrieve a list of public documents",
-        "operationId": "getPublicDocuments",
+        "summary": "Get public timeline tweets",
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "A list of tweets",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/DocumentEntity"
+                    "$ref": "#/components/schemas/TweetEntity"
                   }
                 }
               }
@@ -33,166 +30,47 @@
         }
       }
     },
-    "/public/documents/{documentId}": {
+    "/private/tweets": {
       "get": {
-        "summary": "Retrieve a public document",
-        "operationId": "getPublicDocument",
-        "parameters": [
-          {
-            "name": "documentId",
-            "in": "path",
-            "required": true,
-            "description": "The ID of the document to retrieve",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "summary": "Get user's tweets",
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "A list of user's tweets",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DocumentEntity"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TweetEntity"
+                  }
                 }
               }
             }
           }
         }
-      }
-    },
-    "/private/documents": {
+      },
       "post": {
-        "summary": "Create a new document",
-        "operationId": "createDocument",
+        "summary": "Create a new tweet",
         "requestBody": {
-          "description": "Document data to create",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/DocumentEntity"
+                "$ref": "#/components/schemas/NewTweetEntity"
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Document created",
+            "description": "Tweet created",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DocumentEntity"
+                  "$ref": "#/components/schemas/TweetEntity"
                 }
               }
             }
-          }
-        }
-      },
-      "get": {
-        "summary": "Retrieve all user's documents",
-        "operationId": "getAllUserDocuments",
-        "responses": {
-          "200": {
-            "description": "List of documents",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/DocumentEntity"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/private/documents/{documentId}": {
-      "get": {
-        "summary": "Retrieve a specific document",
-        "operationId": "getPrivateDocument",
-        "parameters": [
-          {
-            "name": "documentId",
-            "in": "path",
-            "required": true,
-            "description": "The ID of the document to retrieve",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DocumentEntity"
-                }
-              }
-            }
-          }
-        }
-      },
-      "put": {
-        "summary": "Update a specific document",
-        "operationId": "updateDocument",
-        "parameters": [
-          {
-            "name": "documentId",
-            "in": "path",
-            "required": true,
-            "description": "The ID of the document to update",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Document data to update",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DocumentEntity"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Document updated",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DocumentEntity"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "summary": "Delete a specific document",
-        "operationId": "deleteDocument",
-        "parameters": [
-          {
-            "name": "documentId",
-            "in": "path",
-            "required": true,
-            "description": "The ID of the document to delete",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Document deleted"
           }
         }
       }
@@ -200,36 +78,40 @@
   },
   "components": {
     "schemas": {
-      "DocumentEntity": {
+      "TweetEntity": {
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "description": "Unique identifier for the document"
+            "type": "string"
           },
-          "title": {
-            "type": "string",
-            "description": "Title of the document"
+          "userId": {
+            "type": "string"
           },
-          "content": {
-            "type": "string",
-            "description": "Content of the document"
+          "text": {
+            "type": "string"
           },
           "createdAt": {
             "type": "string",
-            "format": "date-time",
-            "description": "Creation date of the document"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Last update date of the document"
+            "format": "date-time"
           }
         },
         "required": [
           "id",
-          "title",
-          "content"
+          "userId",
+          "text",
+          "createdAt"
+        ]
+      },
+      "NewTweetEntity": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "maxLength": 140
+          }
+        },
+        "required": [
+          "text"
         ]
       },
       "UserEntity": {

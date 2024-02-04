@@ -1,14 +1,12 @@
-export type DocumentEntity = {
-  /** Unique identifier for the document */
+export type TweetEntity = {
   id: string
-  /** Title of the document */
-  title: string
-  /** Content of the document */
-  content: string
-  /** Creation date of the document */
-  createdAt?: string | undefined
-  /** Last update date of the document */
-  updatedAt?: string | undefined
+  userId: string
+  text: string
+  createdAt: string
+}
+
+export type NewTweetEntity = {
+  text: string
 }
 
 export type UserEntity = {
