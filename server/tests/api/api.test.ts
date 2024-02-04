@@ -1,4 +1,3 @@
-import { OTHER_USER_ID, SELF_USER_ID } from 'tests/const';
 import { expect, test } from 'vitest';
 import { apiClient } from './apiClient';
 
@@ -7,7 +6,7 @@ const createDocument = async (): Promise<{ id: string }> => {
   const res = await apiClient.private.documents.post({
     body: {
       id: 'new-document',
-      userId: SELF_USER_ID,
+      userId: 'user-id',
       title: 'New Document',
       content: 'Document content',
       createdAt: new Date().toISOString(),
@@ -65,8 +64,8 @@ test('GET: /api/public/game', async () => {
 test('POST: /api/public/game', async () => {
   const res = await apiClient.public.game.post({
     body: {
-      player1: { id: SELF_USER_ID, name: 'Player 1' },
-      player2: { id: OTHER_USER_ID, name: 'Player 2' },
+      player1: { id: 'player1-id', name: 'Player 1' },
+      player2: { id: 'player2-id', name: 'Player 2' },
     },
   });
   expect(res.status === 201).toBeTruthy();
