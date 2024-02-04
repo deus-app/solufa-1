@@ -3,7 +3,7 @@ import { apiClient } from './apiClient';
 import { OTHER_USER_ID, SELF_USER_ID } from 'tests/const';
 
 // POST: /api/private/documents
-const createDocument = async () => {
+const createDocument = async (): Promise<{ status: number; body: { id: string; } }> => {
   const documentData = { id: 'doc1', title: 'Test Document', content: 'This is a test document.' };
   return await apiClient.private.documents.post({ body: documentData });
 };
